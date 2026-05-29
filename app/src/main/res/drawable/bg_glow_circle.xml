@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FONDO CÍRCULO GLOW para el Splash
+    Círculo naranja muy tenue detrás del ícono de la botella
+    Da un efecto de "halo" o "aura" que diferencia visualmente la pantalla splash
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="50%"
+        android:centerColor="#22FF6D00"
+        android:endColor="#00FF6D00" />
+</shape>

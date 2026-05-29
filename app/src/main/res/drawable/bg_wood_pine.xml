@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FONDO MADERA CLARA TIPO PINO - Home Fragment (HU 2.0 Criterio 1)
+    Simula madera de pino con vetas horizontales en tonos claros/beige
+    DIFERENTE al otro equipo que usa madera oscura tipo roble
+    Tonos: beige claro, crema, marrón claro - característicos del pino
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Capa base: color madera pino claro -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFD4A96A" />
+        </shape>
+    </item>
+
+    <!-- Veta 1: línea horizontal sutil oscura -->
+    <item android:top="40dp" android:bottom="0dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="0"
+                android:startColor="#10000000"
+                android:centerColor="#20000000"
+                android:endColor="#10000000" />
+            <size android:height="2dp" />
+        </shape>
+    </item>
+
+    <!-- Capa de textura principal: gradiente que simula veta de pino -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="90"
+                android:startColor="#FFE8C98A"
+                android:centerColor="#FFCDA05C"
+                android:endColor="#FFD4A96A" />
+        </shape>
+    </item>
+
+    <!-- Vetas horizontales superpuestas (simulación madera) -->
+    <!-- Veta clara superior -->
+    <item android:bottom="560dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#15FFFFFF" />
+            <size android:height="4dp" />
+        </shape>
+    </item>
+
+    <!-- Veta oscura 1 -->
+    <item android:top="80dp" android:bottom="500dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#12000000" />
+            <size android:height="3dp" />
+        </shape>
+    </item>
+
+    <!-- Veta clara 2 -->
+    <item android:top="120dp" android:bottom="450dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#10FFFFFF" />
+            <size android:height="5dp" />
+        </shape>
+    </item>
+
+    <!-- Veta oscura 2 -->
+    <item android:top="180dp" android:bottom="380dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#15000000" />
+            <size android:height="2dp" />
+        </shape>
+    </item>
+
+    <!-- Veta clara 3 -->
+    <item android:top="230dp" android:bottom="330dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#10FFFFFF" />
+            <size android:height="4dp" />
+        </shape>
+    </item>
+
+    <!-- Veta pronunciada central (característica del pino) -->
+    <item android:top="280dp" android:bottom="280dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#20B8863A" />
+            <size android:height="6dp" />
+        </shape>
+    </item>
+
+    <!-- Veta oscura 3 -->
+    <item android:top="340dp" android:bottom="220dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#12000000" />
+            <size android:height="3dp" />
+        </shape>
+    </item>
+
+    <!-- Veta clara inferior -->
+    <item android:top="400dp" android:bottom="160dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#10FFFFFF" />
+            <size android:height="4dp" />
+        </shape>
+    </item>
+
+    <!-- Veta oscura 4 -->
+    <item android:top="460dp" android:bottom="100dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#15000000" />
+            <size android:height="3dp" />
+        </shape>
+    </item>
+
+    <!-- Overlay semi-transparente para suavizar las vetas -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#08FFFFFF" />
+        </shape>
+    </item>
+
+</layer-list>

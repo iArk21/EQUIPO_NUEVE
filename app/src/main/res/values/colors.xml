@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta principal -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- === IDENTIDAD VISUAL EQUIPO CINCO === -->
+    <!-- Naranja vibrante (diferente al #FF9800 del otro equipo) -->
+    <color name="orange_pico">#FFFF6D00</color>
+    <color name="orange_pico_dark">#FFE65100</color>
+    <color name="orange_pico_light">#FFFF9E40</color>
+
+    <!-- Fondos -->
+    <color name="background_splash">#FF000000</color>
+    <color name="background_toolbar">#FF000000</color>
+    <color name="background_dark_screen">#FF1A1A1A</color>
+
+    <!-- Texto -->
+    <color name="text_primary_dark">#FF000000</color>
+    <color name="text_on_dark">#FFFFFFFF</color>
+    <color name="text_orange">#FFFF6D00</color>
+
+    <!-- Toolbar -->
+    <color name="toolbar_background">#FF000000</color>
+    <color name="toolbar_icon_color">#FFFF6D00</color>
+    <color name="toolbar_border">#FFFF6D00</color>
+
+    <!-- Botón parpadeante -->
+    <color name="btn_blink_color">#FFFF6D00</color>
+    <color name="btn_blink_shadow">#FFBF360C</color>
+
+    <!-- Diálogos -->
+    <color name="dialog_background">#FFFFFFFF</color>
+    <color name="dialog_title_color">#FF000000</color>
+    <color name="dialog_button_color">#FFFF6D00</color>
+
+    <!-- Retos list -->
+    <color name="reto_item_background">#FF1A1A1A</color>
+    <color name="reto_item_divider">#FFFF6D00</color>
+    <color name="reto_icon_color">#FFFF6D00</color>
+
+    <!-- Instrucciones y pantallas secundarias -->
+    <color name="background_instructions">#FF212121</color>
+
+    <!-- Input fields -->
+    <color name="input_underline_color">#FFFF6D00</color>
+</resources>
