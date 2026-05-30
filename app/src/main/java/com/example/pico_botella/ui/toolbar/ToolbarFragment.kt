@@ -1,9 +1,12 @@
 package com.example.pico_botella.ui.toolbar
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -41,22 +44,30 @@ class ToolbarFragment : Fragment() {
 
     private fun setupListeners() {
         binding.btnRate.setOnClickListener {
-            findNavController().navigate(R.id.ratingFragment)
+            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse("https://play.google.com/store/apps/details?id=com.moodle.moodlemobile")
+            }
+            startActivity(intent)
         }
 
         binding.btnAudio.setOnClickListener {
+            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
             viewModel.toggleAudio()
         }
 
         binding.btnInstructions.setOnClickListener {
+            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
             findNavController().navigate(R.id.instructionsFragment)
         }
 
         binding.btnChallenges.setOnClickListener {
+            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
             findNavController().navigate(R.id.challengesFragment)
         }
 
         binding.btnShare.setOnClickListener {
+            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
             findNavController().navigate(R.id.shareFragment)
         }
     }
