@@ -25,9 +25,9 @@
 
     <fragment
         android:id="@+id/challengesFragment"
-        android:name="com.example.pico_botella.ui.challenges.ChallengesFragment"
-        android:label="ChallengesFragment"
-        tools:layout="@layout/fragment_challenges" />
+        android:name="com.example.pico_botella.ui.challenges.RetosFragment"
+        android:label="RetosFragment"
+        tools:layout="@layout/fragment_retos" />
 
     <fragment
         android:id="@+id/shareFragment"
