@@ -24,18 +24,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/ratingFragment"
-        android:name="com.example.pico_botella.ui.rating.RatingFragment"
-        android:label="RatingFragment"
-        tools:layout="@layout/fragment_rating" />
-
-    <fragment
-        android:id="@+id/instructionsFragment"
-        android:name="com.example.pico_botella.ui.instructions.InstructionsFragment"
-        android:label="InstructionsFragment"
-        tools:layout="@layout/fragment_instructions" />
-
-    <fragment
         android:id="@+id/challengesFragment"
         android:name="com.example.pico_botella.ui.challenges.ChallengesFragment"
         android:label="ChallengesFragment"
@@ -46,5 +34,11 @@
         android:name="com.example.pico_botella.ui.share.ShareFragment"
         android:label="ShareFragment"
         tools:layout="@layout/fragment_share" />
+
+    <fragment
+        android:id="@+id/reglasFragment"
+        android:name="com.example.pico_botella.ui.reglas.ReglasFragment"
+        android:label="ReglasFragment"
+        tools:layout="@layout/fragment_reglas" />
 
 </navigation>

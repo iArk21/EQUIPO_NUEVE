@@ -27,12 +27,12 @@
         android:src="@drawable/ic_audio_on" />
 
     <ImageButton
-        android:id="@+id/btn_instructions"
+        android:id="@+id/btn_reglas"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Instrucciones"
+        android:contentDescription="Reglas"
         android:src="@drawable/ic_instructions" />
 
     <ImageButton

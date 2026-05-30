@@ -79,17 +79,29 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Observar el estado del audio desde el ToolbarViewModel
+        // Observar el estado del audio y pausa temporal
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 toolbarViewModel.isAudioEnabled.collect { isEnabled ->
-                    if (isEnabled) {
-                        mediaPlayer?.start()
-                    } else {
-                        mediaPlayer?.pause()
-                    }
+                    updateMusicState(isEnabled, toolbarViewModel.isMusicPausedTemporarily.value)
                 }
             }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                toolbarViewModel.isMusicPausedTemporarily.collect { isPaused ->
+                    updateMusicState(toolbarViewModel.isAudioEnabled.value, isPaused)
+                }
+            }
+        }
+    }
+
+    private fun updateMusicState(isEnabled: Boolean, isPausedTemporarily: Boolean) {
+        if (isEnabled && !isPausedTemporarily) {
+            mediaPlayer?.start()
+        } else {
+            mediaPlayer?.pause()
         }
     }
 
@@ -102,7 +114,8 @@ class HomeFragment : Fragment() {
             if (resId != 0) {
                 mediaPlayer = MediaPlayer.create(requireContext(), resId).apply {
                     isLooping = true
-                    if (toolbarViewModel.isAudioEnabled.value) {
+                    // Iniciar solo si el audio está habilitado Y no está pausado temporalmente
+                    if (toolbarViewModel.isAudioEnabled.value && !toolbarViewModel.isMusicPausedTemporarily.value) {
                         start()
                     }
                 }

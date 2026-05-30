@@ -56,11 +56,6 @@ class ToolbarFragment : Fragment() {
             viewModel.toggleAudio()
         }
 
-        binding.btnInstructions.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
-            findNavController().navigate(R.id.instructionsFragment)
-        }
-
         binding.btnChallenges.setOnClickListener {
             it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
             findNavController().navigate(R.id.challengesFragment)
@@ -69,6 +64,11 @@ class ToolbarFragment : Fragment() {
         binding.btnShare.setOnClickListener {
             it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
             findNavController().navigate(R.id.shareFragment)
+        }
+
+        binding.btnReglas.setOnClickListener {
+            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
+            findNavController().navigate(R.id.reglasFragment)
         }
     }
 
