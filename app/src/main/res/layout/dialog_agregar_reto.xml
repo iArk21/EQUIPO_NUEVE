@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="#212121">
+    android:padding="24dp">
 
+    <!-- Criterio 2: Título centrado, negro y bold -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agregar Nuevo Reto"
-        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:text="Agregar reto"
+        android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold" />
 
+    <!-- Criterio 3: Caja de texto con hint y línea naranja -->
+    <!-- Se cambia el color de fondo a un gris muy claro para contraste -->
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_descripcion"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Descripción del reto"
-        android:textColorHint="#BDBDBD"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:layout_marginTop="24dp"
+        android:hint="Escriba el reto"
+        app:boxBackgroundColor="#F5F5F5"
+        app:hintTextColor="#FF6D00"
+        app:boxStrokeColor="#FF6D00"
+        app:boxStrokeWidth="2dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_descripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:maxLines="3" />
+            android:inputType="textCapSentences"
+            android:textColor="@android:color/black" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -35,24 +44,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:gravity="end"
+        android:gravity="center"
         android:orientation="horizontal">
 
+        <!-- Criterio 4: Botón Cancelar naranja -->
         <Button
             android:id="@+id/btn_cancel"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Cancelar"
-            android:textColor="#BDBDBD" />
+            android:textColor="#FF6D00" />
 
+        <!-- Criterio 5: Botón Guardar (habilitado dinámicamente) -->
+        <!-- Usamos un selector o manejo manual para asegurar el color naranja solo al habilitar -->
         <Button
             android:id="@+id/btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:backgroundTint="#BDBDBD"
+            android:enabled="false"
             android:text="Guardar"
-            android:backgroundTint="#FF6D00"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
