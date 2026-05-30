@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     FRAGMENT SPLASH - HU 1.0
-    DIFERENCIAS vs otro equipo:
-    - Fondo: Negro puro (igual al criterio) PERO con un sutil gradiente radial mediante shape
-    - Botella: usa ic_bottle_cartoon en lugar de ic_bottle simple
-    - Texto: naranja vibrante #FF6D00 (no #FF9800), fuente más grande (36sp vs 32sp)
-    - Texto tiene sombra para mayor impacto visual
-    - Variable del ImageView: ivBottleCartoon (renombrada)
-    - Variable del TextView: tvTituloJuego (renombrada)
-    - Layout tiene padding decorativo diferente
+    Muestra el logo de la aplicación con una animación de entrada.
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,8 +12,7 @@
     android:background="@color/background_splash">
 
     <!--
-        FONDO DECORATIVO: círculo naranja muy sutil detrás de la botella
-        Da profundidad y distingue visualmente del otro equipo
+        FONDO DECORATIVO: círculo naranja sutil detrás de la botella
     -->
     <View
         android:id="@+id/viewGlowCircle"
@@ -34,17 +26,15 @@
         app:layout_constraintVertical_bias="0.42" />
 
     <!--
-        ÍCONO DE BOTELLA CARTOON - HU 1.0 Criterio 2
-        ID renombrado: ivBottleCartoon (antes era ivBottle)
-        Usa el nuevo drawable ic_bottle_cartoon
-        Tamaño: 160dp (antes 150dp) - sutilmente más grande
+        ÍCONO DE BOTELLA - Usando el logo de la app (HU 1.0 Criterio 2 actualizado)
+        ID: ivBottleCartoon (mantenido para compatibilidad con el código Kotlin)
     -->
     <ImageView
         android:id="@+id/ivBottleCartoon"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:contentDescription="@string/splash_bottle_desc"
-        android:src="@drawable/ic_bottle_cartoon"
+        android:src="@mipmap/imagen_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,12 +42,7 @@
         app:layout_constraintVertical_bias="0.42" />
 
     <!--
-        TÍTULO DEL JUEGO - HU 1.0 Criterio 3
-        ID renombrado: tvTituloJuego (antes era tvAppName)
-        Color: @color/orange_pico = #FF6D00 (antes era #FF9800)
-        Tamaño: 36sp (antes 32sp)
-        Sombra: naranja oscuro para efecto de profundidad
-        Letra spacing y estilo diferentes
+        TÍTULO DEL JUEGO
     -->
     <TextView
         android:id="@+id/tvTituloJuego"
@@ -78,15 +63,14 @@
         app:layout_constraintTop_toBottomOf="@id/ivBottleCartoon" />
 
     <!--
-        SUBTÍTULO DECORATIVO (diferencia adicional visual)
-        No está en el otro equipo
+        SUBTÍTULO DECORATIVO
     -->
     <TextView
         android:id="@+id/tvSubtitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="el juego de los valientes"
+        android:text="@string/compartir_eslogan"
         android:textColor="#66FF6D00"
         android:textSize="13sp"
         android:letterSpacing="0.15"

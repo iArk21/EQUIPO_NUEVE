@@ -28,7 +28,6 @@ class HomeFragment : Fragment() {
         HomeViewModelFactory(HomeRepository())
     }
 
-    // Usamos activityViewModels para compartir el estado del audio con la Toolbar
     private val toolbarViewModel: ToolbarViewModel by activityViewModels {
         ToolbarViewModelFactory(ToolbarRepository())
     }
@@ -45,14 +44,12 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupUI()
         observeViewModel()
         setupAudio()
     }
 
     private fun setupUI() {
-        // Animación de parpadeo para el botón
         val blinkAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
         binding.btnPressMe.startAnimation(blinkAnim)
 
@@ -70,7 +67,6 @@ class HomeFragment : Fragment() {
                         binding.tvCountdown.text = count.toString()
                         if (count == 0) {
                             binding.tvCountdown.text = "¡Gira!"
-                            // Aquí se activaría la lógica de giro de la botella
                         }
                     } else {
                         binding.tvCountdown.visibility = View.GONE
@@ -79,26 +75,17 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Observar el estado del audio y pausa temporal
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 toolbarViewModel.isAudioEnabled.collect { isEnabled ->
-                    updateMusicState(isEnabled, toolbarViewModel.isMusicPausedTemporarily.value)
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                toolbarViewModel.isMusicPausedTemporarily.collect { isPaused ->
-                    updateMusicState(toolbarViewModel.isAudioEnabled.value, isPaused)
+                    updateMusicState(isEnabled)
                 }
             }
         }
     }
 
-    private fun updateMusicState(isEnabled: Boolean, isPausedTemporarily: Boolean) {
-        if (isEnabled && !isPausedTemporarily) {
+    private fun updateMusicState(isEnabled: Boolean) {
+        if (isEnabled && isResumed) {
             mediaPlayer?.start()
         } else {
             mediaPlayer?.pause()
@@ -106,16 +93,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupAudio() {
-        // Nota: Asegúrate de agregar un archivo 'background_music.mp3' en res/raw
-        // Por ahora, intentamos inicializarlo si existe el recurso. 
-        // Si no existe, el try-catch evitará el crash.
         try {
             val resId = resources.getIdentifier("background_music", "raw", requireContext().packageName)
             if (resId != 0) {
                 mediaPlayer = MediaPlayer.create(requireContext(), resId).apply {
                     isLooping = true
-                    // Iniciar solo si el audio está habilitado Y no está pausado temporalmente
-                    if (toolbarViewModel.isAudioEnabled.value && !toolbarViewModel.isMusicPausedTemporarily.value) {
+                    if (toolbarViewModel.isAudioEnabled.value) {
                         start()
                     }
                 }
@@ -123,6 +106,20 @@ class HomeFragment : Fragment() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reanudar si el audio está habilitado en la configuración
+        if (toolbarViewModel.isAudioEnabled.value) {
+            mediaPlayer?.start()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Pausar siempre que la app pase a segundo plano
+        mediaPlayer?.pause()
     }
 
     override fun onDestroyView() {
