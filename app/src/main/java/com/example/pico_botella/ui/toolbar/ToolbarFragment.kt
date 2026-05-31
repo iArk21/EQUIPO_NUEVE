@@ -17,12 +17,23 @@ import com.example.pico_botella.R
 import com.example.pico_botella.databinding.FragmentToolbarBinding
 import kotlinx.coroutines.launch
 
+/**
+ * ToolbarFragment — HU 3.0.
+ * Gestiona los 5 botones de la toolbar personalizada.
+ *
+ * CAMBIO para HU 10:
+ * - btnShare ya NO navega a shareFragment (que tenía una pantalla vacía).
+ * - Ahora lanza el Intent de compartir DIRECTAMENTE desde la toolbar,
+ *   que es el comportamiento correcto según HU 10 Criterio 1.
+ *
+ * CAMBIO para HU 4.0:
+ * - URL de calificar corregida a la de Nequi según indica la HU.
+ */
 class ToolbarFragment : Fragment() {
 
     private var _binding: FragmentToolbarBinding? = null
     private val binding get() = _binding!!
 
-    // Usamos activityViewModels para compartir el mismo ViewModel con HomeFragment
     private val viewModel: ToolbarViewModel by activityViewModels {
         ToolbarViewModelFactory(ToolbarRepository())
     }
@@ -37,53 +48,96 @@ class ToolbarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupListeners()
         observeState()
     }
 
     private fun setupListeners() {
+
+        // HU 4.0: Calificar — abre Nequi en Google Play como ejemplo
         binding.btnRate.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://play.google.com/store/apps/details?id=com.moodle.moodlemobile")
+            animarBoton(it) {
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(getString(R.string.calificar_url))
+                }
+                startActivity(intent)
             }
-            startActivity(intent)
         }
 
+        // HU 3.0 Criterio 3: Toggle de audio ON/OFF
         binding.btnAudio.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
-            viewModel.toggleAudio()
+            animarBoton(it) {
+                viewModel.toggleAudio()
+            }
         }
 
-        binding.btnChallenges.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
-            findNavController().navigate(R.id.challengesFragment)
-        }
-
-        binding.btnShare.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
-            findNavController().navigate(R.id.shareFragment)
-        }
-
+        // HU 5.0: Instrucciones del juego
         binding.btnReglas.setOnClickListener {
-            it.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
-            findNavController().navigate(R.id.reglasFragment)
+            animarBoton(it) {
+                findNavController().navigate(R.id.reglasFragment)
+            }
         }
+
+        // HU 6.0: Agregar y listar retos
+        binding.btnChallenges.setOnClickListener {
+            animarBoton(it) {
+                findNavController().navigate(R.id.challengesFragment)
+            }
+        }
+
+        // HU 10: Compartir app — lanza el bottom sheet del SO directamente.
+        // NO navega a ShareFragment; el chooser se abre aquí mismo.
+        binding.btnShare.setOnClickListener {
+            animarBoton(it) {
+                lanzarChooserCompartir()
+            }
+        }
+    }
+
+    /**
+     * HU 10 — Construye y lanza el Intent de compartir.
+     *
+     * Criterio 1: createChooser() genera el bottom sheet nativo del SO.
+     * Criterio 2: Mensaje con título, eslogan y URL (Nequi como ejemplo).
+     */
+    private fun lanzarChooserCompartir() {
+        val titulo  = getString(R.string.compartir_titulo_app)   // "App pico botella"
+        val eslogan = getString(R.string.compartir_eslogan)       // "Solo los valientes lo juegan !!"
+        val url     = getString(R.string.compartir_url)           // URL Nequi como ejemplo
+
+        val mensajeCompleto = "$titulo\n$eslogan\n$url"
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, mensajeCompleto)
+        }
+
+        val chooser = Intent.createChooser(
+            shareIntent,
+            getString(R.string.compartir_chooser_titulo)
+        )
+        startActivity(chooser)
     }
 
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isAudioEnabled.collect { isEnabled ->
-                    if (isEnabled) {
-                        binding.btnAudio.setImageResource(R.drawable.ic_audio_on)
-                    } else {
-                        binding.btnAudio.setImageResource(R.drawable.ic_audio_off)
-                    }
+                    binding.btnAudio.setImageResource(
+                        if (isEnabled) R.drawable.ic_audio_on
+                        else R.drawable.ic_audio_off
+                    )
                 }
             }
         }
+    }
+
+    /**
+     * Animación táctil sutil antes de ejecutar la acción (HU 3.0 Criterio 7).
+     */
+    private fun animarBoton(view: View, accion: () -> Unit) {
+        view.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
+        view.postDelayed(accion, 150)
     }
 
     override fun onDestroyView() {

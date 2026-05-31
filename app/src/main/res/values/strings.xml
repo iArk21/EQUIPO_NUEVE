@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Nombre de la app -->
     <string name="app_name">Pico Botella</string>
     <string name="app_label">pico botella</string>
 
-    <!-- === SPLASH (HU 1.0) === -->
+    <!-- SPLASH (HU 1.0) -->
     <string name="splash_titulo">pico botella</string>
     <string name="splash_bottle_desc">Botella animada pico botella</string>
 
-    <!-- === HOME (HU 2.0) === -->
+    <!-- HOME (HU 2.0) -->
     <string name="home_boton_girar">Presióname</string>
     <string name="home_welcome">¡Bienvenido a Pico Botella!</string>
 
-    <!-- === TOOLBAR (HU 3.0) === -->
+    <!-- TOOLBAR (HU 3.0) -->
     <string name="toolbar_icono_calificar">Calificar app</string>
     <string name="toolbar_icono_audio_on">Audio encendido</string>
     <string name="toolbar_icono_audio_off">Audio apagado</string>
@@ -20,41 +19,41 @@
     <string name="toolbar_icono_retos">Agregar retos</string>
     <string name="toolbar_icono_compartir">Compartir app</string>
 
-    <!-- === CALIFICAR (HU 4.0) === -->
+    <!-- CALIFICAR (HU 4.0) -->
     <string name="calificar_url">https://play.google.com/store/apps/details?id=com.nequi.MobileApp&amp;hl=es_419&amp;gl=es</string>
 
-    <!-- === INSTRUCCIONES (HU 5.0) === -->
+    <!-- INSTRUCCIONES (HU 5.0) -->
     <string name="instrucciones_titulo_ventana">Reglas del Juego</string>
     <string name="instrucciones_como_se_juega_titulo">¿Cómo se juega?</string>
     <string name="instrucciones_como_se_juega_desc">Los jugadores forman un círculo y en el centro colocan el dispositivo móvil, luego tocan el botón parpadeante para girar la botella. El jugador que señale la botella debe cumplir el reto que lanza la app, de lo contrario abandona el juego.</string>
     <string name="instrucciones_quien_gana_titulo">¿Quién gana?</string>
     <string name="instrucciones_quien_gana_desc">Gana el último jugador que no abandone el juego.</string>
 
-    <!-- === RETOS (HU 6.0) === -->
+    <!-- RETOS (HU 6.0) -->
     <string name="retos_titulo_ventana">Retos</string>
     <string name="retos_lista_vacia">Aún no hay retos. ¡Agrega el primero!</string>
 
-    <!-- === DIÁLOGO AGREGAR RETO (HU 7.0) === -->
+    <!-- DIÁLOGO AGREGAR RETO (HU 7.0) -->
     <string name="dialogo_agregar_titulo">Agregar reto</string>
     <string name="dialogo_agregar_hint">Escriba el reto</string>
     <string name="dialogo_btn_cancelar">Cancelar</string>
     <string name="dialogo_btn_guardar">Guardar</string>
 
-    <!-- === DIÁLOGO EDITAR RETO (HU 8.0) === -->
+    <!-- DIÁLOGO EDITAR RETO (HU 8.0) -->
     <string name="dialogo_editar_titulo">Editar reto</string>
 
-    <!-- === DIÁLOGO ELIMINAR RETO (HU 9.0) === -->
+    <!-- DIÁLOGO ELIMINAR RETO (HU 9.0) -->
     <string name="dialogo_eliminar_titulo">¿Desea eliminar el siguiente reto?:</string>
     <string name="dialogo_eliminar_no">NO</string>
     <string name="dialogo_eliminar_si">SI</string>
 
-    <!-- === COMPARTIR (HU 10) === -->
+    <!-- COMPARTIR (HU 10) -->
     <string name="compartir_titulo_app">App pico botella</string>
     <string name="compartir_eslogan">Solo los valientes lo juegan !!</string>
     <string name="compartir_url">https://play.google.com/store/apps/details?id=com.nequi.MobileApp&amp;hl=es_419&amp;gl=es</string>
     <string name="compartir_chooser_titulo">Compartir Pico Botella</string>
 
-    <!-- === DIÁLOGO RETO ALEATORIO (HU 12) === -->
+    <!-- DIÁLOGO RETO ALEATORIO (HU 12) -->
     <string name="dialogo_reto_btn_cerrar">Cerrar</string>
     <string name="dialogo_reto_sin_retos">No hay retos disponibles. ¡Agrega retos primero!</string>
 </resources>
