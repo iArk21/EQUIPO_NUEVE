@@ -1,60 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    DIÁLOGO EDITAR RETO — HU 8.0
+    Criterio 1: Fondo blanco
+    Criterio 2: Título "Editar reto", centrado, negro, bold
+    Criterio 3: Caja de texto con descripción del reto cargada, línea naranja
+    Criterio 4: Botón "Cancelar" naranja
+    Criterio 5: Botón "Guardar" naranja (siempre habilitado en editar, a diferencia del HU 7)
+    Criterio 6: Guardar en SQLite y refrescar lista
+    Criterio 7: No se cierra al tocar fuera (gestionado en el Fragment)
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
+    android:background="@color/dialog_background"
     android:orientation="vertical"
     android:padding="24dp">
 
+    <!-- Criterio 2: Título "Editar reto" — centrado, negro, bold -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Editar Reto"
-        android:textAlignment="center"
+        android:gravity="center"
+        android:text="@string/dialogo_editar_titulo"
         android:textColor="@color/dialog_title_color"
         android:textSize="20sp"
         android:textStyle="bold" />
 
+    <!--
+        Criterio 3: Caja de texto con la descripción actual del reto.
+        La información viene de la base de datos y se carga en el Fragment.
+        Línea/stroke naranja (#FF6D00) como en HU 7.
+        Se usa FilledBox igual que en agregar para consistencia visual.
+    -->
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/til_descripcion"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Descripción del reto a editar"
-        android:textColorHint="#BDBDBD">
+        android:layout_marginTop="20dp"
+        android:hint="@string/dialogo_agregar_hint"
+        app:boxBackgroundColor="#F5F5F5"
+        app:boxStrokeColor="@color/orange_pico"
+        app:boxStrokeWidth="2dp"
+        app:hintTextColor="@color/orange_pico">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_descripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textCapSentences|textMultiLine"
             android:maxLines="3"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/black" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Fila de botones -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:gravity="end"
+        android:gravity="center"
         android:orientation="horizontal">
 
+        <!--
+            Criterio 4: Botón "Cancelar" — color naranja.
+            Al dar click cierra el diálogo y regresa a HU 6.0.
+        -->
         <Button
             android:id="@+id/btn_cancel"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="#D8FF5722"
-            android:text="Cancelar"
-            android:textColor="#FFFFFF" />
+            android:layout_weight="1"
+            android:text="@string/dialogo_btn_cancelar"
+            android:textColor="@color/orange_pico" />
 
+        <!--
+            Criterio 5: Botón "Guardar" — naranja, siempre habilitado en editar
+            (a diferencia del HU 7 donde empieza deshabilitado).
+            El texto ya viene cargado desde la BD, por eso siempre está activo.
+        -->
         <Button
             android:id="@+id/btn_update"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:backgroundTint="#FF6D00"
-            android:text="GUARDAR"
+            android:layout_weight="1"
+            android:backgroundTint="@color/orange_pico"
+            android:text="@string/dialogo_btn_guardar"
             android:textColor="@android:color/white" />
 
     </LinearLayout>

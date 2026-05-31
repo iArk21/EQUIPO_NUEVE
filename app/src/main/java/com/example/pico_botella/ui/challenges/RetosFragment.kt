@@ -18,20 +18,24 @@ import com.example.pico_botella.ui.toolbar.ToolbarViewModel
 import com.example.pico_botella.ui.toolbar.ToolbarViewModelFactory
 
 /**
- * Fragmento que gestiona la lista de retos.
- * Implementa MVVM, Room y control de audio.
+ * Fragmento que gestiona la lista de retos — HU 6.0.
+ * Coordina los diálogos de HU 7.0, HU 8.0 y HU 9.0.
+ *
+ * CAMBIO vs versión anterior:
+ * - showDeleteDialog(reto) ahora pasa el RetoEntity completo a EliminarRetoDialogFragment,
+ *   necesario para que HU 9.0 Criterio 3 muestre la descripción del reto a eliminar.
  */
 class RetosFragment : Fragment() {
 
     private var _binding: FragmentRetosBinding? = null
     private val binding get() = _binding!!
 
-    // ViewModel compartido para audio (Criterio 1)
+    // ViewModel compartido para audio (HU 6.0 Criterio 1)
     private val toolbarViewModel: ToolbarViewModel by activityViewModels {
         ToolbarViewModelFactory(ToolbarRepository())
     }
 
-    // ViewModel específico para retos (Criterio 4)
+    // ViewModel específico para retos
     private val viewModel: RetosViewModel by viewModels {
         val database = AppDatabase.getDatabase(requireContext())
         RetosViewModelFactory(RetoRepository(database.retoDao()))
@@ -49,7 +53,6 @@ class RetosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupToolbar()
         setupRecyclerView()
         setupListeners()
@@ -58,7 +61,6 @@ class RetosFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        // Criterio 3: Flecha de regreso y navegación
         binding.btnBack.setOnClickListener {
             handleMusicOnExit()
             findNavController().popBackStack()
@@ -67,7 +69,7 @@ class RetosFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = RetoAdapter(
-            onEditClick = { reto -> showEditDialog(reto) },
+            onEditClick  = { reto -> showEditDialog(reto) },
             onDeleteClick = { reto -> showDeleteDialog(reto) }
         )
         binding.rvRetos.apply {
@@ -77,10 +79,7 @@ class RetosFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        // Criterio 8: FAB para agregar reto
-        binding.fabAddReto.setOnClickListener {
-            showAddDialog()
-        }
+        binding.fabAddReto.setOnClickListener { showAddDialog() }
     }
 
     private fun observeViewModel() {
@@ -90,7 +89,6 @@ class RetosFragment : Fragment() {
     }
 
     private fun handleMusicOnEnter() {
-        // Criterio 1: Pausar música si está en ON
         if (toolbarViewModel.isAudioEnabled.value) {
             viewModel.setRestoreMusic(true)
             toolbarViewModel.setMusicPausedTemporarily(true)
@@ -98,7 +96,6 @@ class RetosFragment : Fragment() {
     }
 
     private fun handleMusicOnExit() {
-        // Criterio 1 y 3: Restaurar música si inicialmente estaba en ON
         if (viewModel.shouldRestoreMusic.value) {
             toolbarViewModel.setMusicPausedTemporarily(false)
         }
@@ -116,15 +113,20 @@ class RetosFragment : Fragment() {
         }.show(parentFragmentManager, "EditarRetoDialog")
     }
 
+    /**
+     * CORREGIDO para HU 9.0:
+     * Ahora pasa el RetoEntity completo al diálogo, no solo el callback.
+     * Esto permite que EliminarRetoDialogFragment muestre la descripción
+     * del reto (Criterio 3) y ejecute el delete correcto (Criterio 5).
+     */
     private fun showDeleteDialog(reto: RetoEntity) {
-        EliminarRetoDialogFragment {
+        EliminarRetoDialogFragment(reto) {
             viewModel.delete(reto)
         }.show(parentFragmentManager, "EliminarRetoDialog")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Asegurar restauración al salir
         handleMusicOnExit()
         _binding = null
     }

@@ -1,29 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    DIÁLOGO ELIMINAR RETO — HU 9.0
+
+    Criterio 1: Fondo blanco
+    Criterio 2: Título "¿Desea eliminar el siguiente reto?:" — centrado, negro, bold
+    Criterio 3: Texto con la descripción del reto a eliminar (viene de la BD)
+    Criterio 4: Texto "NO" naranja — cierra el diálogo, regresa a HU 6.0
+    Criterio 5: Texto "SI" naranja — elimina de SQLite y quita de la lista
+    Criterio 6: No se cierra al tocar fuera (gestionado en el Fragment)
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
+    android:background="@color/dialog_background"
     android:orientation="vertical"
     android:padding="24dp">
 
+    <!--
+        Criterio 2: Título "¿Desea eliminar el siguiente reto?:"
+        centrado, negro, bold
+    -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Eliminar Reto"
-        android:textAlignment="center"
+        android:gravity="center"
+        android:text="@string/dialogo_eliminar_titulo"
         android:textColor="@color/dialog_title_color"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
+    <!--
+        Criterio 3: Descripción del reto a eliminar.
+        Esta información viene de la base de datos SQLite.
+        Se llena desde el Fragment con: tvDescripcionReto.text = reto.descripcion
+    -->
     <TextView
+        android:id="@+id/tv_descripcion_reto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="¿Estás seguro de que deseas eliminar este reto? Esta acción no se puede deshacer."
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textSize="16sp" />
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif"
+        android:text="" />
 
+    <!--
+        Criterios 4 y 5: Botones "NO" y "SI" — ambos de color naranja.
+        La HU pide que sean TEXTOS (no botones rellenos), por eso se usan
+        TextButton style. El texto naranja los diferencia del fondo blanco.
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,22 +58,35 @@
         android:gravity="end"
         android:orientation="horizontal">
 
+        <!--
+            Criterio 4: "NO" naranja.
+            Al dar click cierra el diálogo y deja al usuario en HU 6.0.
+        -->
         <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btn_no"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancelar"
-            android:textColor="#BDBDBD" />
+            android:text="@string/dialogo_eliminar_no"
+            android:textColor="@color/orange_pico"
+            android:textStyle="bold"
+            android:textSize="15sp" />
 
+        <!--
+            Criterio 5: "SI" naranja.
+            Al dar click elimina el reto de SQLite y la lista se actualiza
+            automáticamente gracias al Flow de Room en el ViewModel.
+        -->
         <Button
-            android:id="@+id/btn_delete"
+            android:id="@+id/btn_si"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:backgroundTint="#F44336"
-            android:text="Eliminar"
-            android:textColor="@android:color/white" />
+            android:text="@string/dialogo_eliminar_si"
+            android:textColor="@color/orange_pico"
+            android:textStyle="bold"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
