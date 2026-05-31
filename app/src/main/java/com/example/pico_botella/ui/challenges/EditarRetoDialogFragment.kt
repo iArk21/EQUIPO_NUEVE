@@ -26,6 +26,12 @@ class EditarRetoDialogFragment(
         val builder = AlertDialog.Builder(requireContext())
         builder.setView(binding.root)
 
+        val dialog = builder.create()
+
+        // Criterio 7: No cerrar al dar click fuera
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+
         binding.btnUpdate.setOnClickListener {
             val desc = binding.etDescripcion.text.toString()
             if (desc.isNotBlank()) {

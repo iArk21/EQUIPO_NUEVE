@@ -20,6 +20,13 @@ class EliminarRetoDialogFragment(private val onConfirm: () -> Unit) : DialogFrag
         val builder = AlertDialog.Builder(requireContext())
         builder.setView(binding.root)
 
+        val dialog = builder.create()
+
+        // Criterio 6: No cerrar al dar click fuera
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+
+
         binding.btnDelete.setOnClickListener {
             onConfirm()
             dismiss()

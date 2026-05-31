@@ -2,32 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#FFFFFF"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="#212121">
+    android:padding="24dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Editar Reto"
-        android:textColor="@android:color/white"
+        android:textAlignment="center"
+        android:textColor="@color/dialog_title_color"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Descripción del reto"
-        android:textColorHint="#BDBDBD"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:hint="Descripción del reto a editar"
+        android:textColorHint="#BDBDBD">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_descripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:maxLines="3" />
+            android:maxLines="3"
+            android:textColor="@android:color/white" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -43,16 +44,17 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#D8FF5722"
             android:text="Cancelar"
-            android:textColor="#BDBDBD" />
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btn_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Actualizar"
             android:backgroundTint="#FF6D00"
+            android:text="GUARDAR"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
