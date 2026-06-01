@@ -34,6 +34,8 @@ class HomeFragment : Fragment() {
 
     private var mediaPlayer: MediaPlayer? = null
 
+    private var spinPlayer: MediaPlayer? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +69,35 @@ class HomeFragment : Fragment() {
                         binding.tvCountdown.text = count.toString()
                         if (count == 0) {
                             binding.tvCountdown.text = "¡Gira!"
+
+                            binding.ivBottle.animate().cancel()
+
+                            // Duración aleatoria entre 3 y 5 segundos HU11-C1
+                            val duration = (3000..5000).random().toLong()
+
+                            // Mantener velocidad constante:
+                            // aproximadamente 2 vueltas por segundo
+                            val vueltas = (duration / 1000f * 2).toInt()
+
+                            // Ángulo final aleatorio HU11-C3
+                            val finalAngle = (0..359).random()
+
+                            // siguiente giro inicia desde la posicion anterior HU11-C4
+                            val rotation = (vueltas * 360 + finalAngle).toFloat()
+
+                            if (toolbarViewModel.isAudioEnabled.value) {
+                                spinPlayer?.seekTo(0)
+                                spinPlayer?.start()
+                            }
+
+                            binding.ivBottle.animate()
+                                .rotationBy(rotation)
+                                .setDuration(duration)
+                                .withEndAction {
+                                    spinPlayer?.pause()
+                                    spinPlayer?.seekTo(0)
+                                }
+                                .start()
                         }
                     } else {
                         binding.tvCountdown.visibility = View.GONE
@@ -103,6 +134,9 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+            // HU11-C2 SONIDO MIENTRAS GIRA LA BOTELLA
+            spinPlayer = MediaPlayer.create(requireContext(), R.raw.spin_sound)
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -126,6 +160,10 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         mediaPlayer?.release()
         mediaPlayer = null
+
+        spinPlayer?.release()
+        spinPlayer = null
+
         _binding = null
     }
 }
