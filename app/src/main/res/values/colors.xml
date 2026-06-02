@@ -4,11 +4,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- === IDENTIDAD VISUAL EQUIPO CINCO === -->
-    <!-- Naranja vibrante (diferente al #FF9800 del otro equipo) -->
-    <color name="orange_pico">#FFFF6D00</color>
-    <color name="orange_pico_dark">#FFE65100</color>
-    <color name="orange_pico_light">#FFFF9E40</color>
+    <!-- === IDENTIDAD VISUAL NEÓN === -->
+    <color name="neon_green">#39FF14</color>
+    <color name="neon_orange">#FF5F1F</color>
+    <color name="neon_cyan">#00FFFF</color>
+    <color name="neon_pink">#FF00FF</color>
+
+    <!-- ALIAS DE COMPATIBILIDAD (Esto arregla el error de compilación) -->
+    <color name="orange_pico">@color/neon_orange</color>
+    <color name="orange_pico_dark">#B34216</color> <!-- Sombra del naranja neón -->
+    <color name="orange_pico_light">#FF8A50</color>
 
     <!-- Fondos -->
     <color name="background_splash">#FF000000</color>
@@ -18,30 +23,29 @@
     <!-- Texto -->
     <color name="text_primary_dark">#FF000000</color>
     <color name="text_on_dark">#FFFFFFFF</color>
-    <color name="text_orange">#FFFF6D00</color>
+    <color name="text_orange">@color/neon_orange</color>
 
-    <!-- Toolbar -->
-    <color name="toolbar_background">#FF000000</color>
-    <color name="toolbar_icon_color">#FFFF6D00</color>
-    <color name="toolbar_border">#FFFF6D00</color>
+    <!-- Toolbar - CAMBIADO A NARANJA NEÓN -->
+    <color name="toolbar_icon_color">@color/neon_orange</color>
+    <color name="toolbar_border">@color/neon_orange</color>
 
     <!-- Botón parpadeante -->
-    <color name="btn_blink_color">#FFFF6D00</color>
+    <color name="btn_blink_color">@color/neon_orange</color>
     <color name="btn_blink_shadow">#FFBF360C</color>
 
     <!-- Diálogos -->
     <color name="dialog_background">#FFFFFFFF</color>
     <color name="dialog_title_color">#FF000000</color>
-    <color name="dialog_button_color">#FFFF6D00</color>
+    <color name="dialog_button_color">@color/neon_orange</color>
 
     <!-- Retos list -->
     <color name="reto_item_background">#FF1A1A1A</color>
-    <color name="reto_item_divider">#FFFF6D00</color>
-    <color name="reto_icon_color">#FFFF6D00</color>
+    <color name="reto_item_divider">@color/neon_orange</color>
+    <color name="reto_icon_color">@color/neon_orange</color>
 
     <!-- Instrucciones y pantallas secundarias -->
     <color name="background_instructions">#FF212121</color>
 
     <!-- Input fields -->
-    <color name="input_underline_color">#FFFF6D00</color>
+    <color name="input_underline_color">@color/neon_orange</color>
 </resources>
