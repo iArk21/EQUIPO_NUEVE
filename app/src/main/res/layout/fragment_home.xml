@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_wood_pine"
+    android:background="@drawable/imagen_proyecto"
     tools:context=".ui.home.HomeFragment">
 
     <!-- HU 3.0: Toolbar personalizada -->
@@ -47,13 +47,13 @@
         app:layout_constraintStart_toStartOf="@id/iv_bottle"
         app:layout_constraintTop_toTopOf="@id/iv_bottle" />
 
-    <!-- HU 2.0: Botón Presióname (Ajustado marginBottom para no ser tapado por navegación) -->
+    <!-- HU 2.0: Botón Presióname (Usando Naranja Neón) -->
     <Button
         android:id="@+id/btn_press_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
-        android:backgroundTint="#FF9800"
+        android:backgroundTint="@color/neon_orange"
         android:paddingStart="40dp"
         android:paddingEnd="40dp"
         android:text="Presióname"
