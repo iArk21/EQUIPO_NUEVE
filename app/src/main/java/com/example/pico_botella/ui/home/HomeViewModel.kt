@@ -18,4 +18,9 @@ class HomeViewModel(private val repository: HomeRepository) : ViewModel() {
             }
         }
     }
+
+    // Limpia el estado para evitar que se dispare el giro al volver de otro fragmento
+    fun resetCountdown() {
+        _countdown.value = null
+    }
 }

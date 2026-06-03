@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="40dp"
+    android:clipToPadding="false">
+
+    <!-- Fondo del diálogo (Criterio 1) -->
+    <View
+        android:id="@+id/dialog_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/bg_dialog_challenge"
+        app:layout_constraintBottom_toBottomOf="@id/tv_challenge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_creator="1"
+        android:layout_marginBottom="-40dp"/>
+
+    <!-- Círculo superior (Criterio 2) -->
+    <FrameLayout
+        android:id="@+id/container_pokemon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/bg_circle_white_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_pokemon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:scaleType="centerInside"
+            tools:src="@tools:sample/avatars" />
+    </FrameLayout>
+
+    <!-- Texto del reto (Criterio 3) -->
+    <TextView
+        android:id="@+id/tv_challenge"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:paddingBottom="40dp"
+        android:text="Realiza un RecyclerView que liste una api de Pokemones"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/dialog_background"
+        app:layout_constraintStart_toStartOf="@id/dialog_background"
+        app:layout_constraintTop_toBottomOf="@id/container_pokemon" />
+
+    <!-- Botón Cerrar (Criterio 4) -->
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/neon_orange"
+        android:text="@string/dialogo_reto_btn_cerrar"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/dialog_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_background" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
