@@ -69,7 +69,7 @@ class SplashFragment : Fragment() {
     private fun iniciarTemporizadorSplash() {
         viewLifecycleOwner.lifecycleScope.launch {
             delay(SPLASH_DURATION_MS)
-            navegarAlHome()
+            navegarAlLogin()
         }
     }
 
@@ -78,9 +78,9 @@ class SplashFragment : Fragment() {
      * El popUpTo en nav_graph.xml limpia el Splash del backstack
      * (HU 1.0 Criterio 5: botón atrás desde Home no regresa al Splash).
      */
-    private fun navegarAlHome() {
+    private fun navegarAlLogin() {
         if (isAdded) {
-            findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
         }
     }
 
