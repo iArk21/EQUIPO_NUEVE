@@ -8,10 +8,11 @@ import androidx.room.RoomDatabase
 /**
  * Base de datos principal de la aplicación.
  */
-@Database(entities = [RetoEntity::class], version = 1, exportSchema = false)
+@Database(entities = [RetoEntity::class, UserEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun retoDao(): RetoDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
@@ -23,7 +24,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "pico_botella_db"
-                ).build()
+                )
+                .fallbackToDestructiveMigration()
+                .build()
                 INSTANCE = instance
                 instance
             }

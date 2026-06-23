@@ -1,5 +1,6 @@
 package com.example.pico_botella.ui.login
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -7,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,6 +26,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: LoginViewModel by viewModels()
+
     private var isPasswordVisible = false
 
     override fun onCreateView(
@@ -58,29 +61,28 @@ class LoginFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        // Criterio 6: Toggle de contraseña con iconos específicos
         binding.tilPassword.setEndIconOnClickListener {
             togglePasswordVisibility()
         }
 
         binding.btnLogin.setOnClickListener {
-            // Navegar al Home después del Login
-            findNavController().navigate(R.id.homeFragment)
+            viewModel.onLoginClicked()
+        }
+
+        binding.tvRegister.setOnClickListener {
+            viewModel.onRegisterClicked()
         }
     }
 
     private fun togglePasswordVisibility() {
         isPasswordVisible = !isPasswordVisible
         if (isPasswordVisible) {
-            // Criterio 6: Cambia a ojo cerrado y deja visible la contraseña
-            binding.etPassword.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+            binding.etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             binding.tilPassword.endIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_eye_closed)
         } else {
-            // Oculta nuevamente la contraseña y muestra ojo abierto
-            binding.etPassword.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+            binding.etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             binding.tilPassword.endIconDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_eye_open)
         }
-        // Mantener el cursor al final
         binding.etPassword.setSelection(binding.etPassword.text?.length ?: 0)
     }
 
@@ -90,20 +92,49 @@ class LoginFragment : Fragment() {
                 launch {
                     viewModel.isLoginEnabled.collect { isEnabled ->
                         binding.btnLogin.isEnabled = isEnabled
-                        // Criterio 8: Blanco bold cuando se habilita
+                        binding.btnLogin.alpha = if (isEnabled) 1.0f else 0.5f
+                    }
+                }
+
+                launch {
+                    viewModel.isRegisterEnabled.collect { isEnabled ->
+                        binding.tvRegister.isEnabled = isEnabled
                         if (isEnabled) {
-                            binding.btnLogin.alpha = 1.0f
-                            binding.btnLogin.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                            binding.tvRegister.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+                            binding.tvRegister.setTypeface(null, Typeface.BOLD)
                         } else {
-                            binding.btnLogin.alpha = 0.5f
+                            binding.tvRegister.setTextColor(android.graphics.Color.parseColor("#9EA1A1"))
+                            binding.tvRegister.setTypeface(null, Typeface.NORMAL)
                         }
                     }
                 }
 
                 launch {
+                    viewModel.isLoading.collect { isLoading ->
+                        binding.pbLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+                        binding.etEmail.isEnabled = !isLoading
+                        binding.etPassword.isEnabled = !isLoading
+                        binding.tilPassword.isEnabled = !isLoading
+                    }
+                }
+
+                launch {
                     viewModel.passwordError.collect { error ->
-                        // Criterio 5: Mensaje rojo y borde rojo en tiempo real
                         binding.tilPassword.error = error
+                    }
+                }
+
+                launch {
+                    viewModel.navigationEvent.collect { success ->
+                        if (success) {
+                            findNavController().navigate(R.id.homeFragment)
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.errorEvent.collect { message ->
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }

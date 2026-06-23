@@ -65,33 +65,17 @@ class HomeFragment : Fragment() {
             isGameRunning = true
             binding.btnPressMe.visibility = View.GONE
             binding.btnPressMe.clearAnimation()
+
+            // HU 11 - Criterio 8: Pausar música de fondo al iniciar
             mediaPlayer?.pause()
-            homeViewModel.startCountdown()
+
+            // MODIFICACIÓN: Giro inmediato al presionar el botón (eliminando conteo inicial 3,2,1)
+            startBottleSpin()
         }
     }
 
     private fun observeViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.countdown.collect { count ->
-                    if (count != null) {
-                        binding.tvCountdown.visibility = View.VISIBLE
-                        binding.tvCountdown.setTextColor(android.graphics.Color.RED)
-                        binding.tvCountdown.text = count.toString()
-                        if (count == 0) {
-                            binding.tvCountdown.text = "¡Gira!"
-                            // Solución al error reportado: resetear el estado del conteo
-                            // para que no se repita el giro al volver de otra pantalla.
-                            homeViewModel.resetCountdown()
-                            startBottleSpin()
-                        }
-                    } else {
-                        binding.tvCountdown.visibility = View.GONE
-                    }
-                }
-            }
-        }
-
+        // Observador de audio (Criterio 8)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 toolbarViewModel.isAudioEnabled.collect { isEnabled ->
@@ -119,6 +103,7 @@ class HomeFragment : Fragment() {
             .withEndAction {
                 spinPlayer?.pause()
                 spinPlayer?.seekTo(0)
+                // Se mantiene la cuenta regresiva post-giro (Criterio 5)
                 showPostSpinCountdown()
             }
             .start()
