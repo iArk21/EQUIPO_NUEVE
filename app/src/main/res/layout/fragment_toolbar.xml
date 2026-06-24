@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    TOOLBAR PERSONALIZADA — HU 3.0
+    6 íconos naranja: estrella, audio, instrucciones, retos, compartir, cerrar sesión
+    El sexto botón (btn_logout) es el nuevo agregado para el criterio de sesión.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,49 +13,68 @@
     android:layout_margin="8dp"
     android:gravity="center">
 
+    <!-- Estrella: calificar app (HU 4.0) -->
     <ImageButton
         android:id="@+id/btn_rate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Calificar"
+        android:contentDescription="@string/toolbar_icono_calificar"
         android:src="@drawable/ic_star" />
 
+    <!-- Audio ON/OFF toggle (HU 3.0 Criterio 3) -->
     <ImageButton
         android:id="@+id/btn_audio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Audio"
+        android:contentDescription="@string/toolbar_icono_audio_on"
         android:src="@drawable/ic_audio_on" />
 
+    <!-- Instrucciones del juego (HU 5.0) -->
     <ImageButton
         android:id="@+id/btn_reglas"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Reglas"
+        android:contentDescription="@string/toolbar_icono_instrucciones"
         android:src="@drawable/ic_instructions" />
 
+    <!-- Agregar retos (HU 6.0) -->
     <ImageButton
         android:id="@+id/btn_challenges"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Retos"
+        android:contentDescription="@string/toolbar_icono_retos"
         android:src="@drawable/ic_challenges" />
 
+    <!-- Compartir app (HU 10) -->
     <ImageButton
         android:id="@+id/btn_share"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Compartir"
+        android:contentDescription="@string/toolbar_icono_compartir"
         android:src="@drawable/ic_share" />
+
+    <!--
+        NUEVO: Cerrar sesión (criterio sesión guardada)
+        Ícono logout naranja — al dar click cierra la sesión de Firebase
+        y regresa al LoginFragment limpiando todo el backstack.
+    -->
+    <ImageButton
+        android:id="@+id/btn_logout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/toolbar_icono_logout"
+        android:src="@drawable/ic_logout" />
 
 </LinearLayout>

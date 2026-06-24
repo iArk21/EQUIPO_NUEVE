@@ -10,28 +10,27 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.pico_botella.R
 import com.example.pico_botella.databinding.FragmentSplashBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * SplashFragment: Pantalla de inicio de la aplicación. (HU 1.0)
- * Muestra una animación de botella cartoon y navega al Home tras 5 segundos.
+ * SplashFragment — HU 1.0
  *
- * CAMBIOS DE VARIABLES vs versión anterior:
- * - _binding / binding  →  _splashBinding / splashBinding
- * - animation           →  bottleAnim
- * - ivBottle            →  ivBottleCartoon (en el layout)
- * - tvAppName           →  tvTituloJuego (en el layout)
+ * Criterio nuevo (sesión guardada):
+ * Firebase Auth persiste la sesión automáticamente en el dispositivo.
+ * Al arrancar la app, se verifica si hay un usuario autenticado:
+ *   - SI hay sesión  → navega directo al Home (sin pasar por Login)
+ *   - NO hay sesión → navega al Login como siempre
+ *
+ * Esto cubre el caso: usuario hizo login, cerró la app sin cerrar sesión,
+ * y al volver no debe ver el Login de nuevo.
  */
 class SplashFragment : Fragment() {
 
-    // VARIABLE RENOMBRADA: antes _binding, ahora _splashBinding
     private var _splashBinding: FragmentSplashBinding? = null
-
-    // VARIABLE RENOMBRADA: antes binding, ahora splashBinding
     private val splashBinding get() = _splashBinding!!
 
-    // Constante para el tiempo del splash (5 segundos - HU 1.0 Criterio 4)
     companion object {
         private const val SPLASH_DURATION_MS = 5000L
     }
@@ -51,43 +50,48 @@ class SplashFragment : Fragment() {
         iniciarTemporizadorSplash()
     }
 
-    /**
-     * Inicia la animación de la botella cartoon.
-     * Usa la nueva animación bottle_animation (balanceo + flotación).
-     * VARIABLE RENOMBRADA: antes 'animation', ahora 'bottleAnim'
-     */
     private fun iniciarAnimacionBottle() {
-        // VARIABLE RENOMBRADA: antes 'animation', ahora 'bottleAnim'
         val bottleAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.bottle_animation)
-        // ivBottleCartoon es el nuevo ID del ImageView (antes ivBottle)
         splashBinding.ivBottleCartoon.startAnimation(bottleAnim)
     }
 
     /**
-     * Temporizador de 5 segundos usando corrutinas (HU 1.0 Criterio 4).
+     * Espera los 5 segundos del splash y luego decide a dónde navegar
+     * según si hay sesión activa en Firebase Auth.
      */
     private fun iniciarTemporizadorSplash() {
         viewLifecycleOwner.lifecycleScope.launch {
             delay(SPLASH_DURATION_MS)
-            navegarAlLogin()
+            verificarSesionYNavegar()
         }
     }
 
     /**
-     * Navegación segura al HomeFragment.
-     * El popUpTo en nav_graph.xml limpia el Splash del backstack
-     * (HU 1.0 Criterio 5: botón atrás desde Home no regresa al Splash).
+     * Verifica si Firebase tiene un usuario autenticado.
+     *
+     * FirebaseAuth.getInstance().currentUser:
+     *   - Devuelve el usuario si hizo login/registro previamente y NO cerró sesión.
+     *   - Devuelve null si nunca inició sesión o si cerró sesión explícitamente.
+     *
+     * Firebase guarda esta sesión en el dispositivo de forma persistente —
+     * no se pierde al cerrar la app, solo al llamar auth.signOut().
      */
-    private fun navegarAlLogin() {
-        if (isAdded) {
+    private fun verificarSesionYNavegar() {
+        if (!isAdded) return
+
+        val usuarioActual = FirebaseAuth.getInstance().currentUser
+
+        if (usuarioActual != null) {
+            // Hay sesión guardada → ir directo al Home
+            findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+        } else {
+            // No hay sesión → ir al Login
             findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Limpiar binding para evitar memory leaks
-        // VARIABLE RENOMBRADA: antes _binding = null, ahora _splashBinding = null
         _splashBinding = null
     }
 }

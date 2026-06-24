@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -39,7 +40,6 @@ class HomeFragment : Fragment() {
 
     private var mediaPlayer: MediaPlayer? = null
     private var spinPlayer: MediaPlayer? = null
-    
     private var isGameRunning = false
 
     override fun onCreateView(
@@ -52,9 +52,31 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupBackPress()
         setupUI()
         observeViewModel()
         setupAudio()
+    }
+
+    /**
+     * Criterio 9: Cuando el usuario esté en el Home y presione el botón
+     * atrás del dispositivo, debe salir de la app (escritorio del teléfono),
+     * NO regresar al Login ni al Splash.
+     *
+     * OnBackPressedCallback intercepta el botón atrás antes de que el
+     * Navigation Component lo procese. Al llamar requireActivity().finish()
+     * se cierra la app completamente — el backstack de navegación ni se consulta.
+     */
+    private fun setupBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // Salir de la app → muestra el escritorio del teléfono
+                    requireActivity().finish()
+                }
+            }
+        )
     }
 
     private fun setupUI() {
@@ -65,17 +87,12 @@ class HomeFragment : Fragment() {
             isGameRunning = true
             binding.btnPressMe.visibility = View.GONE
             binding.btnPressMe.clearAnimation()
-
-            // HU 11 - Criterio 8: Pausar música de fondo al iniciar
             mediaPlayer?.pause()
-
-            // MODIFICACIÓN: Giro inmediato al presionar el botón (eliminando conteo inicial 3,2,1)
             startBottleSpin()
         }
     }
 
     private fun observeViewModel() {
-        // Observador de audio (Criterio 8)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 toolbarViewModel.isAudioEnabled.collect { isEnabled ->
@@ -103,7 +120,6 @@ class HomeFragment : Fragment() {
             .withEndAction {
                 spinPlayer?.pause()
                 spinPlayer?.seekTo(0)
-                // Se mantiene la cuenta regresiva post-giro (Criterio 5)
                 showPostSpinCountdown()
             }
             .start()
@@ -111,19 +127,21 @@ class HomeFragment : Fragment() {
 
     private fun showPostSpinCountdown() {
         viewLifecycleOwner.lifecycleScope.launch {
-            binding.tvCountdown.setTextColor(ContextCompat.getColor(requireContext(), R.color.neon_orange))
+            binding.tvCountdown.setTextColor(
+                ContextCompat.getColor(requireContext(), R.color.neon_orange)
+            )
             binding.tvCountdown.visibility = View.VISIBLE
-            
+
             for (i in 3 downTo 0) {
                 binding.tvCountdown.text = i.toString()
                 delay(1000)
             }
-            
+
             binding.tvCountdown.visibility = View.GONE
             binding.btnPressMe.visibility = View.VISIBLE
             val blinkAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
             binding.btnPressMe.startAnimation(blinkAnim)
-            
+
             showRandomChallengeDialog()
         }
     }
@@ -131,13 +149,13 @@ class HomeFragment : Fragment() {
     private suspend fun showRandomChallengeDialog() {
         val database = AppDatabase.getDatabase(requireContext())
         val retosList = database.retoDao().getAllRetos().firstOrNull()
-        
+
         val mensajeReto = if (retosList.isNullOrEmpty()) {
             getString(R.string.dialogo_reto_sin_retos)
         } else {
             retosList.random().descripcion
         }
-        
+
         RetoAleatorioDialogFragment(mensajeReto) {
             isGameRunning = false
             if (toolbarViewModel.isAudioEnabled.value) {
@@ -148,17 +166,16 @@ class HomeFragment : Fragment() {
 
     private fun updateMusicState(isEnabled: Boolean) {
         if (!isGameRunning) {
-            if (isEnabled && isResumed) {
-                mediaPlayer?.start()
-            } else {
-                mediaPlayer?.pause()
-            }
+            if (isEnabled && isResumed) mediaPlayer?.start()
+            else mediaPlayer?.pause()
         }
     }
 
     private fun setupAudio() {
         try {
-            val resId = resources.getIdentifier("background_music", "raw", requireContext().packageName)
+            val resId = resources.getIdentifier(
+                "background_music", "raw", requireContext().packageName
+            )
             if (resId != 0) {
                 mediaPlayer = MediaPlayer.create(requireContext(), resId).apply {
                     isLooping = true

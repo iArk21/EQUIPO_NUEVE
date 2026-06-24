@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -15,19 +16,17 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.pico_botella.R
 import com.example.pico_botella.databinding.FragmentToolbarBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 /**
- * ToolbarFragment — HU 3.0.
- * Gestiona los 5 botones de la toolbar personalizada.
+ * ToolbarFragment — HU 3.0
+ * 6 botones naranja: estrella, audio, instrucciones, retos, compartir, cerrar sesión.
  *
- * CAMBIO para HU 10:
- * - btnShare ya NO navega a shareFragment (que tenía una pantalla vacía).
- * - Ahora lanza el Intent de compartir DIRECTAMENTE desde la toolbar,
- *   que es el comportamiento correcto según HU 10 Criterio 1.
- *
- * CAMBIO para HU 4.0:
- * - URL de calificar corregida a la de Nequi según indica la HU.
+ * NUEVO — btn_logout:
+ * Muestra un AlertDialog de confirmación antes de cerrar sesión.
+ * Al confirmar: llama FirebaseAuth.signOut() y navega al Login
+ * limpiando todo el backstack (el usuario no puede volver al Home con "atrás").
  */
 class ToolbarFragment : Fragment() {
 
@@ -64,7 +63,7 @@ class ToolbarFragment : Fragment() {
             }
         }
 
-        // HU 3.0 Criterio 3: Toggle de audio ON/OFF
+        // HU 3.0 Criterio 3: Toggle audio ON/OFF
         binding.btnAudio.setOnClickListener {
             animarBoton(it) {
                 viewModel.toggleAudio()
@@ -85,38 +84,64 @@ class ToolbarFragment : Fragment() {
             }
         }
 
-        // HU 10: Compartir app — lanza el bottom sheet del SO directamente.
-        // NO navega a ShareFragment; el chooser se abre aquí mismo.
+        // HU 10: Compartir app
         binding.btnShare.setOnClickListener {
             animarBoton(it) {
                 lanzarChooserCompartir()
             }
         }
+
+        // NUEVO — Cerrar sesión
+        binding.btnLogout.setOnClickListener {
+            animarBoton(it) {
+                mostrarDialogoLogout()
+            }
+        }
     }
 
     /**
-     * HU 10 — Construye y lanza el Intent de compartir.
+     * Muestra un diálogo de confirmación antes de cerrar sesión.
+     * Evita que el usuario cierre sesión por accidente.
+     */
+    private fun mostrarDialogoLogout() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Cerrar sesión")
+            .setMessage("¿Deseas cerrar tu sesión?")
+            .setPositiveButton("Sí") { _, _ ->
+                cerrarSesion()
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
+
+    /**
+     * Cierra la sesión de Firebase y navega al Login.
      *
-     * Criterio 1: createChooser() genera el bottom sheet nativo del SO.
-     * Criterio 2: Mensaje con título, eslogan y URL (Nequi como ejemplo).
+     * FirebaseAuth.signOut() borra el token de sesión guardado en el dispositivo,
+     * por lo que la próxima vez que abra la app, el SplashFragment detectará
+     * currentUser == null y navegará al Login.
+     *
+     * popUpTo(nav_graph) + inclusive=true limpia TODO el backstack —
+     * el usuario no puede volver al Home presionando "atrás" desde el Login.
+     */
+    private fun cerrarSesion() {
+        FirebaseAuth.getInstance().signOut()
+        findNavController().navigate(R.id.action_global_to_loginFragment)
+    }
+
+    /**
+     * HU 10: Lanza el bottom sheet nativo del SO para compartir.
      */
     private fun lanzarChooserCompartir() {
-        val titulo  = getString(R.string.compartir_titulo_app)   // "App pico botella"
-        val eslogan = getString(R.string.compartir_eslogan)       // "Solo los valientes lo juegan !!"
-        val url     = getString(R.string.compartir_url)           // URL Nequi como ejemplo
-
-        val mensajeCompleto = "$titulo\n$eslogan\n$url"
+        val mensaje = "${getString(R.string.compartir_titulo_app)}\n" +
+                      "${getString(R.string.compartir_eslogan)}\n" +
+                      getString(R.string.compartir_url)
 
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, mensajeCompleto)
+            putExtra(Intent.EXTRA_TEXT, mensaje)
         }
-
-        val chooser = Intent.createChooser(
-            shareIntent,
-            getString(R.string.compartir_chooser_titulo)
-        )
-        startActivity(chooser)
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.compartir_chooser_titulo)))
     }
 
     private fun observeState() {
@@ -133,7 +158,7 @@ class ToolbarFragment : Fragment() {
     }
 
     /**
-     * Animación táctil sutil antes de ejecutar la acción (HU 3.0 Criterio 7).
+     * Animación táctil sutil (HU 3.0 Criterio 7).
      */
     private fun animarBoton(view: View, accion: () -> Unit) {
         view.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.button_touch))
