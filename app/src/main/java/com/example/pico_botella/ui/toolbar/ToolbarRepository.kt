@@ -2,10 +2,15 @@ package com.example.pico_botella.ui.toolbar
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ToolbarRepository {
-    // En una implementación real con Room, aquí se guardaría el estado del audio.
-    // Por ahora lo manejamos en memoria para cumplir con la estructura MVVM solicitada.
+/**
+ * Repositorio para la Toolbar.
+ * @Singleton: Asegura que la misma instancia sea compartida en toda la app.
+ */
+@Singleton
+class ToolbarRepository @Inject constructor() {
     private val _isAudioEnabled = MutableStateFlow(true)
     val isAudioEnabled: StateFlow<Boolean> = _isAudioEnabled
 

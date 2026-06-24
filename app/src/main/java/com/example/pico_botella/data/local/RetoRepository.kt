@@ -1,11 +1,13 @@
 package com.example.pico_botella.data.local
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 /**
  * Repositorio para abstraer el acceso a datos de los retos.
+ * Se usa @Inject para que Hilt sepa cómo crear instancias de esta clase.
  */
-class RetoRepository(private val retoDao: RetoDao) {
+class RetoRepository @Inject constructor(private val retoDao: RetoDao) {
 
     val allRetos: Flow<List<RetoEntity>> = retoDao.getAllRetos()
 

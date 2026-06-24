@@ -9,37 +9,31 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.pico_botella.data.local.AppDatabase
 import com.example.pico_botella.data.local.RetoEntity
-import com.example.pico_botella.data.local.RetoRepository
 import com.example.pico_botella.databinding.FragmentRetosBinding
-import com.example.pico_botella.ui.toolbar.ToolbarRepository
 import com.example.pico_botella.ui.toolbar.ToolbarViewModel
-import com.example.pico_botella.ui.toolbar.ToolbarViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
- * Fragmento que gestiona la lista de retos — HU 6.0.
- * Coordina los diálogos de HU 7.0, HU 8.0 y HU 9.0.
- *
- * CAMBIO vs versión anterior:
- * - showDeleteDialog(reto) ahora pasa el RetoEntity completo a EliminarRetoDialogFragment,
- *   necesario para que HU 9.0 Criterio 3 muestre la descripción del reto a eliminar.
+ * Fragmento que gestiona la lista de retos.
+ * @AndroidEntryPoint: Habilita la inyección de dependencias en este Fragmento.
+ * Permite que Hilt proporcione automáticamente los ViewModels.
  */
+@AndroidEntryPoint
 class RetosFragment : Fragment() {
 
     private var _binding: FragmentRetosBinding? = null
     private val binding get() = _binding!!
 
-    // ViewModel compartido para audio (HU 6.0 Criterio 1)
-    private val toolbarViewModel: ToolbarViewModel by activityViewModels {
-        ToolbarViewModelFactory(ToolbarRepository())
-    }
+    /**
+     * Hilt se encarga de inyectar el ViewModel compartido sin necesidad de una Factory manual.
+     */
+    private val toolbarViewModel: ToolbarViewModel by activityViewModels()
 
-    // ViewModel específico para retos
-    private val viewModel: RetosViewModel by viewModels {
-        val database = AppDatabase.getDatabase(requireContext())
-        RetosViewModelFactory(RetoRepository(database.retoDao()))
-    }
+    /**
+     * Hilt se encarga de inyectar el ViewModel de retos automáticamente.
+     */
+    private val viewModel: RetosViewModel by viewModels()
 
     private lateinit var adapter: RetoAdapter
 
@@ -113,12 +107,6 @@ class RetosFragment : Fragment() {
         }.show(parentFragmentManager, "EditarRetoDialog")
     }
 
-    /**
-     * CORREGIDO para HU 9.0:
-     * Ahora pasa el RetoEntity completo al diálogo, no solo el callback.
-     * Esto permite que EliminarRetoDialogFragment muestre la descripción
-     * del reto (Criterio 3) y ejecute el delete correcto (Criterio 5).
-     */
     private fun showDeleteDialog(reto: RetoEntity) {
         EliminarRetoDialogFragment(reto) {
             viewModel.delete(reto)
