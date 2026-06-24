@@ -15,28 +15,20 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.pico_botella.R
-import com.example.pico_botella.data.local.AppDatabase
 import com.example.pico_botella.databinding.FragmentHomeBinding
 import com.example.pico_botella.ui.challenges.RetoAleatorioDialogFragment
-import com.example.pico_botella.ui.toolbar.ToolbarRepository
 import com.example.pico_botella.ui.toolbar.ToolbarViewModel
-import com.example.pico_botella.ui.toolbar.ToolbarViewModelFactory
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.firstOrNull
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val homeViewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory(HomeRepository())
-    }
-
-    private val toolbarViewModel: ToolbarViewModel by activityViewModels {
-        ToolbarViewModelFactory(ToolbarRepository())
-    }
+    private val homeViewModel: HomeViewModel by viewModels()
+    private val toolbarViewModel: ToolbarViewModel by activityViewModels()
 
     private var mediaPlayer: MediaPlayer? = null
     private var spinPlayer: MediaPlayer? = null
@@ -58,21 +50,11 @@ class HomeFragment : Fragment() {
         setupAudio()
     }
 
-    /**
-     * Criterio 9: Cuando el usuario esté en el Home y presione el botón
-     * atrás del dispositivo, debe salir de la app (escritorio del teléfono),
-     * NO regresar al Login ni al Splash.
-     *
-     * OnBackPressedCallback intercepta el botón atrás antes de que el
-     * Navigation Component lo procese. Al llamar requireActivity().finish()
-     * se cierra la app completamente — el backstack de navegación ni se consulta.
-     */
     private fun setupBackPress() {
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    // Salir de la app → muestra el escritorio del teléfono
                     requireActivity().finish()
                 }
             }
@@ -95,8 +77,31 @@ class HomeFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                toolbarViewModel.isAudioEnabled.collect { isEnabled ->
-                    updateMusicState(isEnabled)
+                launch {
+                    toolbarViewModel.isAudioEnabled.collect { isEnabled ->
+                        updateMusicState(isEnabled)
+                    }
+                }
+                launch {
+                    homeViewModel.countdown.collect { count ->
+                        if (count != null) {
+                            binding.tvCountdown.visibility = View.VISIBLE
+                            binding.tvCountdown.text = count.toString()
+                            if (count == 0) {
+                                binding.tvCountdown.visibility = View.GONE
+                                homeViewModel.getRandomReto()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    homeViewModel.randomReto.collect { reto ->
+                        if (reto != null) {
+                            showChallengeDialog(reto)
+                            homeViewModel.resetRandomReto()
+                            homeViewModel.resetCountdown()
+                        }
+                    }
                 }
             }
         }
@@ -120,44 +125,20 @@ class HomeFragment : Fragment() {
             .withEndAction {
                 spinPlayer?.pause()
                 spinPlayer?.seekTo(0)
-                showPostSpinCountdown()
+                binding.tvCountdown.setTextColor(
+                    ContextCompat.getColor(requireContext(), R.color.neon_orange)
+                )
+                homeViewModel.startCountdown()
             }
             .start()
     }
 
-    private fun showPostSpinCountdown() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            binding.tvCountdown.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.neon_orange)
-            )
-            binding.tvCountdown.visibility = View.VISIBLE
-
-            for (i in 3 downTo 0) {
-                binding.tvCountdown.text = i.toString()
-                delay(1000)
-            }
-
-            binding.tvCountdown.visibility = View.GONE
+    private fun showChallengeDialog(reto: String) {
+        RetoAleatorioDialogFragment(reto) {
+            isGameRunning = false
             binding.btnPressMe.visibility = View.VISIBLE
             val blinkAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
             binding.btnPressMe.startAnimation(blinkAnim)
-
-            showRandomChallengeDialog()
-        }
-    }
-
-    private suspend fun showRandomChallengeDialog() {
-        val database = AppDatabase.getDatabase(requireContext())
-        val retosList = database.retoDao().getAllRetos().firstOrNull()
-
-        val mensajeReto = if (retosList.isNullOrEmpty()) {
-            getString(R.string.dialogo_reto_sin_retos)
-        } else {
-            retosList.random().descripcion
-        }
-
-        RetoAleatorioDialogFragment(mensajeReto) {
-            isGameRunning = false
             if (toolbarViewModel.isAudioEnabled.value) {
                 mediaPlayer?.start()
             }
