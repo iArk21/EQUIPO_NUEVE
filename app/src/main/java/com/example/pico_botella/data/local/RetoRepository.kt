@@ -1,6 +1,7 @@
 package com.example.pico_botella.data.local
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -13,8 +14,10 @@ class RetoRepository @Inject constructor(
 ) {
 
     // HU 8.0 y 13.0: Carga retos desde Firestore en lugar de SQLite
+    // Criterio 6 HU 7.0: Se ordena por createdAt DESC para que los nuevos aparezcan arriba
     val allRetos: Flow<List<RetoEntity>> = callbackFlow {
         val subscription = firestore.collection("retos")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
@@ -42,10 +45,6 @@ class RetoRepository @Inject constructor(
 
     // HU 8.0: Actualizar reto en Firestore
     suspend fun update(reto: RetoEntity) {
-        // Nota: El ID en la entidad local es un Int por Room, 
-        // pero en Firestore es un String. Para una migración completa 
-        // se debería usar el ID de documento de Firestore.
-        // Como guía, buscamos por descripción o necesitamos el docId real.
         val snapshot = firestore.collection("retos")
             .whereEqualTo("createdAt", reto.createdAt)
             .get()
